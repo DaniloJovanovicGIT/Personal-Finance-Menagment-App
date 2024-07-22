@@ -11,7 +11,7 @@
   html, body {
     height: 100%;
     width: 100%;
-    font-family: sans-serif;
+    font-family: $prmary-font;
   }
   
   body {
@@ -38,10 +38,12 @@
   }
   
   // Import color variables
-  @import './styles/variables';
+  @import './styles/variables.scss';
   
   // Add your global styles here
   body {
     background-color: $background-color;
     color: $text-color;
+    max-width: 1440px;
+    margin: auto;
   }
