@@ -1,0 +1,20 @@
+.app-container{
+    display: flex;
+}
+
+main{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 50px 30px;
+}
+
+.main--screen{
+    width: 75%;
+}
+
+.aside{
+    margin-top: 35px;
+    background: #000;
+    width: 20%;
+}

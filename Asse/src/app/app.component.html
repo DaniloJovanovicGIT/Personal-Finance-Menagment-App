@@ -1,1 +1,11 @@
-<app-navigation></app-navigation>
+<div class="app-container">
+  <app-navigation></app-navigation>
+  <div class="content">
+    <app-toolbar></app-toolbar>
+    <main>
+      <div class="main--screen"><app-financial-overview></app-financial-overview></div>
+      <div class="aside"><app-filters></app-filters></div>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
