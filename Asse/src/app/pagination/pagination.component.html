@@ -1,0 +1,28 @@
+<div class="export">
+  <div class="title">
+    <p>Export list of transactions as:</p>
+  </div>
+  <div class="icons">
+    <img class="icon" src="assets/images/pdf2.png" alt="pdf" />
+    <img class="icon" src="assets/images/xls.png" alt="excel" />
+    <img class="icon" src="assets/images/csv.png" alt="csv" />
+  </div>
+</div>
+
+<div class="pagination">
+  <button (click)="goToPreviousPage()" [disabled]="currentPage === 1">
+    &laquo; Previous
+  </button>
+
+  <button
+    *ngFor="let page of pages"
+    (click)="selectPage(page)"
+    [class.active]="page === currentPage"
+  >
+    {{ page }}
+  </button>
+
+  <button (click)="goToNextPage()" [disabled]="currentPage === totalPages">
+    Next &raquo;
+  </button>
+</div>

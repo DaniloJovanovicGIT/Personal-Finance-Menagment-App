@@ -1,6 +1,9 @@
 @import "../../styles/variables.scss";
 
 .main-navigation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   max-width: 260px;
   min-height: 100%;
   background-color: $bg-white;
@@ -53,4 +56,12 @@
       }
     }
   }
+}
+
+.logout-button {
+  width: 100%;
+  border: none;
+  border-top: 1px solid $dark-gray;
+  padding: 5px;
+  position:static;
 }

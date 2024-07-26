@@ -1,0 +1,55 @@
+<div *ngIf="transaction">
+  <div class="transaction-details">
+    <div class="transaction--details__left">
+      <div class="transaction-id">ID: {{ transaction?.id }}</div>
+      <div class="transaction-profile">
+        <div class="transaction-image">
+          <span
+            *ngIf="transaction?.kind === 'pmt' || transaction?.kind === 'fee'"
+            class="material-icons arrow up"
+            >arrow_upward</span
+          >
+          <span
+            *ngIf="transaction?.kind === 'dep'"
+            class="material-icons arrow down"
+            >arrow_downward</span
+          >
+          <span class="cash material-symbols-outlined"> payments </span>
+        </div>
+        <div class="name-and-date">
+          <div class="beneficiary-name">
+            {{ transaction?.['beneficiary-name'] }}
+          </div>
+          <div class="transaction-date">{{ transaction?.date }}</div>
+        </div>
+      </div>
+      <div class="transaction-category">
+        <div class="category-tag" *ngIf="transaction?.category?.name; else addCategory">
+           {{ transaction?.category?.name }}
+        </div>
+        <ng-template #addCategory>
+          <button class="category-tag add-category-button" (click)="addCategory">
+             Add Category<span class="plus material-icons">add</span>
+          </button>
+        </ng-template>
+      </div>
+    </div>
+    <div class="transaction--details__right">
+      <div class="transaction-amount">
+        {{ transaction?.amount }} {{ transaction?.currency }}
+      </div>
+      <div class="transaction-decoration">
+        <div class="decoration-image"></div>
+        <div class="decoration-pin material-symbols-outlined"> location_on </div>
+      </div>
+      <div class="transaction-split">
+        <span *ngIf="transaction['splits']">Split</span>
+        <span *ngIf="!transaction['splits']">No Split</span>
+        <button class="split--button">Split transaction</button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #noTransaction>
+  <div>No transaction details available.</div>
+</ng-template>

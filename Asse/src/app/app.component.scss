@@ -1,10 +1,12 @@
 .app-container{
     display: flex;
+    justify-content: center;
+    max-width: 1440px;
+
 }
 
 main{
     display: flex;
-    width: 100%;
     justify-content: space-between;
     margin: 50px 30px;
 }

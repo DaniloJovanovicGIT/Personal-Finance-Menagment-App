@@ -1,0 +1,46 @@
+@import '../../styles/variables.scss';
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+  
+    button {
+      margin: 0 5px;
+      padding: 5px 10px;
+      border: none;
+      background-color: #f0f0f0;
+      cursor: pointer;
+  
+      &.active {
+        background-color: #007bff;
+        color: white;
+      }
+  
+      &:disabled {
+        background-color: #d3d3d3;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+
+.export{
+    display: flex;
+    height: 60px;
+    width: 100%;
+    background: $bg-white;
+    align-items: center;
+    padding: 10px 20px;
+    justify-content: space-between;
+    text-transform: uppercase;
+}
+
+.icons{
+    display: flex;
+}
+
+.icon{
+    padding: 5px;
+}
