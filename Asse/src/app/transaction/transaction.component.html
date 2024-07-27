@@ -1,7 +1,7 @@
 <div *ngIf="transaction">
   <div class="transaction-details">
     <div class="transaction--details__left">
-      <div class="transaction-id">ID: {{ transaction?.id }}</div>
+      <div class="transaction-id">ID: {{ transaction.id }}</div>
       <div class="transaction-profile">
         <div class="transaction-image">
           <span
@@ -18,14 +18,14 @@
         </div>
         <div class="name-and-date">
           <div class="beneficiary-name">
-            {{ transaction?.['beneficiary-name'] }}
+            {{ transaction['beneficiary-name'] }}
           </div>
-          <div class="transaction-date">{{ transaction?.date }}</div>
+          <div class="transaction-date">{{ transaction.date }}</div>
         </div>
       </div>
       <div class="transaction-category">
         <div class="category-tag" *ngIf="transaction?.category?.name; else addCategory">
-           {{ transaction?.category?.name }}
+           {{ transaction.category?.name }}
         </div>
         <ng-template #addCategory>
           <button class="category-tag add-category-button" (click)="addCategory">
@@ -36,7 +36,7 @@
     </div>
     <div class="transaction--details__right">
       <div class="transaction-amount">
-        {{ transaction?.amount }} {{ transaction?.currency }}
+        {{ transaction.amount }} {{ transaction.currency }}
       </div>
       <div class="transaction-decoration">
         <div class="decoration-image"></div>

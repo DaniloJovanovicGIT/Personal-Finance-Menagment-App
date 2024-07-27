@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { TransactionService } from '../services/transaction.service';
-import { CategoryService } from '../services/categories.service';
-import { TransactionsResponse, CategoriesResponse, Transaction, Category } from '../../types/interfaces';
+import { TransactionsResponse } from '../../types/interfaces';
 import { CommonModule } from '@angular/common';
 import { TransactionComponent } from '../transaction/transaction.component';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { Transaction } from '../../types/interfaces';
 
 @Component({
   standalone: true,
@@ -14,19 +14,16 @@ import { PaginationComponent } from '../pagination/pagination.component';
   styleUrls: ['./transaction-list.component.scss']
 })
 export class TransactionsListComponent implements OnInit {
-
   transactions: TransactionsResponse | null = null;
-  categories: Category[] = [];
- currentPage: number = 1;
+  currentPage: number = 1;
+  pageSize: number = 3;
 
-  constructor(private transactionService: TransactionService, private categoryService: CategoryService) { }
+  constructor(private transactionService: TransactionService) { }
 
   ngOnInit(): void {
-    this.transactionService.fetchTransactions({}).subscribe({
-      next: (data: TransactionsResponse) => {
-        this.transactions = data;
-        this.assignCategoriesToTransactions();
-        console.log(data);
+    this.transactionService.fetchTransactionsFromApi().subscribe({
+      next: () => {
+        this.loadTransactions();
       },
       error: (error: any) => {
         console.error('Error loading transactions', error);
@@ -36,44 +33,25 @@ export class TransactionsListComponent implements OnInit {
     this.transactionService.transactions$.subscribe({
       next: (data: TransactionsResponse | null) => {
         this.transactions = data;
-        this.assignCategoriesToTransactions();
         console.log(data);
       },
       error: (error: any) => {
         console.error('Error in transactions stream', error);
       }
     });
-
-    this.fetchCategories();
   }
 
-  fetchCategories(): void {
-    this.categoryService.fetchCategories({}).subscribe({
-      next: (data: CategoriesResponse) => {
-        this.categories = data.items;
-        this.assignCategoriesToTransactions();
-      },
-      error: (error: any) => {
-        console.error('Error loading categories', error);
-      }
-    });
-  }
-
-  assignCategoriesToTransactions(): void {
-    if (this.transactions && this.categories.length > 0) {
-      this.transactions.items.forEach(transaction => {
-        if (transaction.catcode) {
-          const category = this.categories.find(cat => cat.code === transaction.catcode);
-          if (category) {
-            transaction.category = category;
-          }
-        }
-      });
-    }
+  loadTransactions(): void {
+    this.transactionService.getTransactions(this.currentPage, this.pageSize);
   }
 
   onPageChanged(page: number): void {
     this.currentPage = page;
-    this.fetchCategories();
+    this.loadTransactions();
+  }
+
+  onTransactionModified(transaction: Transaction): void {
+    this.transactionService.modifyTransaction(transaction);
+    this.loadTransactions(); // Reload to reflect changes
   }
 }

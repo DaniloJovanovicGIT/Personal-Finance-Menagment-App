@@ -10,19 +10,36 @@
 </div>
 
 <div class="pagination">
-  <button (click)="goToPreviousPage()" [disabled]="currentPage === 1">
-    &laquo; Previous
+  <div class="pages">
+  <button (click)="goToPreviousPage()" [disabled]="currentPage === 1" class="pag-button">
+    <span class="material-symbols-outlined">
+      chevron_left
+    </span> Prev
   </button>
 
-  <button
-    *ngFor="let page of pages"
-    (click)="selectPage(page)"
-    [class.active]="page === currentPage"
-  >
-    {{ page }}
-  </button>
+  <ng-container *ngIf="totalPages > 6">
+    <button *ngIf="currentPage > 1" (click)="selectPage(1)">1</button>
+    <span *ngIf="currentPage > 3">...</span>
+    <button *ngIf="currentPage > 2" (click)="selectPage(currentPage - 1)">{{ currentPage - 1 }}</button>
+    <button class="active">{{ currentPage }}</button>
+    <button *ngIf="currentPage < totalPages - 1" (click)="selectPage(currentPage + 1)">{{ currentPage + 1 }}</button>
+    <span *ngIf="currentPage < totalPages - 2">...</span>
+    <button *ngIf="currentPage < totalPages" (click)="selectPage(totalPages)">{{ totalPages }}</button>
+  </ng-container>
 
-  <button (click)="goToNextPage()" [disabled]="currentPage === totalPages">
-    Next &raquo;
+  <ng-container *ngIf="totalPages <= 6">
+    <button *ngFor="let page of pages" (click)="selectPage(page)" [class.active]="page === currentPage">
+      {{ page }}
+    </button>
+  </ng-container>
+
+  <button (click)="goToNextPage()" [disabled]="currentPage === totalPages" class="pag-button">
+    Next <span class="material-symbols-outlined">
+      chevron_right
+    </span>
   </button>
+</div>
+  <div class="current-page-info">
+    Page {{ currentPage }} of {{ totalPages }}
+  </div>
 </div>

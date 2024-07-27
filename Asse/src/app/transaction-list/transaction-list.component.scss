@@ -8,5 +8,13 @@ ul {
 
 .transaction{
     display: block;
+  background: #000;
+  }
+
+.white{
+  background-color: $bg-white;
 }
 
+.gray{
+  background-color: $bg-gray;
+}

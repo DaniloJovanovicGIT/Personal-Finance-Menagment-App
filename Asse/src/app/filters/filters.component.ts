@@ -42,10 +42,10 @@ export class FiltersComponent {
 
     console.log('Applying filters with:', filters);
 
-    this.transactionService.fetchTransactions(filters).subscribe(
+    this.transactionService.fetchTransactionsFromApi().subscribe(
       (data) => {
         console.log('Transactions fetched successfully:', data);
-        this.transactionService.updateTransactions(data);
+        this.transactionService.updateTransactions();
       },
       (error) => {
         console.error('Error fetching transactions', error);

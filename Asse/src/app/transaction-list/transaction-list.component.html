@@ -3,14 +3,18 @@
 </div>
 <ul *ngIf="transactions && transactions.items.length > 0">
   <li *ngFor="let transaction of transactions.items, let i = index">
-    <app-transaction [transaction]="transaction" [ngStyle]="{'background-color': (i % 2 === 0) ? 'white' : '#eeeeee'}" class="transaction">
-      ></app-transaction>
+    <app-transaction class="transaction"
+      [transaction]="transaction"
+      [ngClass]="{ 'gray': i % 2 !== 0, 'white': i % 2 === 0 }"
+      (transactionModified)="onTransactionModified(transaction)"></app-transaction
+    >
   </li>
 </ul>
 
 <app-pagination
   [totalItems]="transactions?.['total-count'] || 0"
-  [itemsPerPage]="10"
+  [itemsPerPage]="pageSize"
   [currentPage]="currentPage"
-  (pageChanged)="onPageChanged($event)">
+  (pageChanged)="onPageChanged($event)"
+>
 </app-pagination>
