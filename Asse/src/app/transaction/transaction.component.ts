@@ -1,4 +1,3 @@
-// transaction.component.ts
 import { Component, Input } from '@angular/core';
 import { Transaction } from '../../types/interfaces';
 import { CommonModule } from '@angular/common';

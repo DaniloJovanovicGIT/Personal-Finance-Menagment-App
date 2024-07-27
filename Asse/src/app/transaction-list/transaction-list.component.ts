@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TransactionService } from '../services/transaction.service';
-import { TransactionsResponse } from '../../types/interfaces';
+import { TransactionsResponse, Transaction } from '../../types/interfaces';
 import { CommonModule } from '@angular/common';
 import { TransactionComponent } from '../transaction/transaction.component';
 import { PaginationComponent } from '../pagination/pagination.component';
-import { Transaction } from '../../types/interfaces';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, TransactionComponent, PaginationComponent],
+  imports: [CommonModule, TransactionComponent, PaginationComponent, FormsModule],
   selector: 'app-transactions-list',
   templateUrl: './transaction-list.component.html',
   styleUrls: ['./transaction-list.component.scss']
 })
-export class TransactionsListComponent implements OnInit {
+export class TransactionsListComponent implements OnInit, OnChanges {
+  @Input() filterData: any = {};
   transactions: TransactionsResponse | null = null;
   currentPage: number = 1;
   pageSize: number = 3;
@@ -21,28 +22,26 @@ export class TransactionsListComponent implements OnInit {
   constructor(private transactionService: TransactionService) { }
 
   ngOnInit(): void {
-    this.transactionService.fetchTransactionsFromApi().subscribe({
-      next: () => {
-        this.loadTransactions();
-      },
-      error: (error: any) => {
-        console.error('Error loading transactions', error);
-      }
-    });
+    this.loadTransactions();
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['filterData']) {
+      this.loadTransactions();
+    }
+  }
+
+  loadTransactions(): void {
+    this.transactionService.getTransactions(this.currentPage, this.pageSize, this.filterData);
     this.transactionService.transactions$.subscribe({
       next: (data: TransactionsResponse | null) => {
         this.transactions = data;
         console.log(data);
       },
       error: (error: any) => {
-        console.error('Error in transactions stream', error);
+        console.error('Error loading transactions', error);
       }
     });
-  }
-
-  loadTransactions(): void {
-    this.transactionService.getTransactions(this.currentPage, this.pageSize);
   }
 
   onPageChanged(page: number): void {
@@ -52,6 +51,5 @@ export class TransactionsListComponent implements OnInit {
 
   onTransactionModified(transaction: Transaction): void {
     this.transactionService.modifyTransaction(transaction);
-    this.loadTransactions(); // Reload to reflect changes
   }
 }

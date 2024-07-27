@@ -1,13 +1,13 @@
+
 <div *ngIf="!transactions || transactions.items.length === 0">
   No transactions found.
 </div>
 <ul *ngIf="transactions && transactions.items.length > 0">
-  <li *ngFor="let transaction of transactions.items, let i = index">
+  <li *ngFor="let transaction of transactions.items; let i = index">
     <app-transaction class="transaction"
       [transaction]="transaction"
       [ngClass]="{ 'gray': i % 2 !== 0, 'white': i % 2 === 0 }"
-      (transactionModified)="onTransactionModified(transaction)"></app-transaction
-    >
+      (transactionModified)="onTransactionModified(transaction)"></app-transaction>
   </li>
 </ul>
 

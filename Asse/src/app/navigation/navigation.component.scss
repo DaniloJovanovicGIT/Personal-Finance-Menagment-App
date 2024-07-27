@@ -64,4 +64,14 @@
   border-top: 1px solid $dark-gray;
   padding: 5px;
   position:static;
+  background-color: $bg-white;
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
+  color: $dark-gray;
+  cursor: pointer;
+
+  span{
+    padding: 0 5px;
+  }
 }

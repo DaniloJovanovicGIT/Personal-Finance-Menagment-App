@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Transaction, TransactionsResponse } from '../../types/interfaces';
@@ -11,9 +11,8 @@ export class TransactionService {
   private transactionsSubject = new BehaviorSubject<TransactionsResponse | null>(null);
   transactions$ = this.transactionsSubject.asObservable();
 
-  private apiUrl = 'http://127.0.0.1:4010/transactions?page=728&page-size=309&sort-by=dolor&sort-order=asc';
+  private apiUrl = 'http://127.0.0.1:4010/transactions';
   private localStorageKey = 'transactions';
-
 
   constructor(private http: HttpClient) { }
 
@@ -52,8 +51,26 @@ export class TransactionService {
     this.transactionsSubject.next(transactionsResponse);
   }
 
-  getTransactions(page: number, pageSize: number): void {
-    const storedTransactions = this.getStoredTransactions();
+  getTransactions(page: number, pageSize: number, filters: any = {}): void {
+    let storedTransactions = this.getStoredTransactions();
+
+    // Apply filters
+    if (filters.selectedOptionType) {
+      storedTransactions = storedTransactions.filter(transaction => transaction.kind === filters.selectedOptionType);
+    }
+
+    if (filters.fromDate) {
+      storedTransactions = storedTransactions.filter(transaction => new Date(transaction.date) >= new Date(filters.fromDate));
+    }
+
+    if (filters.toDate) {
+      storedTransactions = storedTransactions.filter(transaction => new Date(transaction.date) <= new Date(filters.toDate));
+    }
+
+    if (filters.beneficiary) {
+      storedTransactions = storedTransactions.filter(transaction => transaction['beneficiary-name'].includes(filters.beneficiary));
+    }
+
     const paginatedTransactions = storedTransactions.slice((page - 1) * pageSize, page * pageSize);
     const transactionsResponse: TransactionsResponse = {
       items: paginatedTransactions,

@@ -3,8 +3,16 @@
   <div class="content">
     <app-toolbar></app-toolbar>
     <main>
-      <div class="main--screen"><app-financial-overview></app-financial-overview></div>
-      <div class="aside"><app-filters></app-filters></div>
+      <div class="main--screen">
+        <app-financial-overview></app-financial-overview>
+        <app-transactions-list [filterData]="filterData"></app-transactions-list>
+      </div>
+      <div class="aside">
+        <app-filters
+          (filtersApplied)="onFiltersApplied($event)"
+          (filtersCleared)="onFiltersCleared()">
+        </app-filters>
+      </div>
       <router-outlet></router-outlet>
     </main>
   </div>

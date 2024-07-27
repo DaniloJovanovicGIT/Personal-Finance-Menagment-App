@@ -1,64 +1,40 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { TransactionService } from '../services/transaction.service';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-filters',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule],
+  selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss'],
-  providers: [TransactionService],
+  imports: [ FormsModule ],
 })
 export class FiltersComponent {
-  fromDate: Date = new Date(2021, 0, 1); // January 1, 2021
-  toDate: Date = new Date(2021, 0, 31); // January 31, 2021
-  selectedOptionType = 'pmt';
-  selectedOptionAccount = 'all';
-  beneficiary = '';
+  @Output() filtersApplied = new EventEmitter<any>();
+  @Output() filtersCleared = new EventEmitter<void>();
 
-  constructor(private transactionService: TransactionService) {}
+  fromDate: string | null = null;
+  toDate: string | null = null;
+  selectedOptionType: string = '';
+  selectedOptionAccount: string = 'all';
+  beneficiary: string = '';
 
   applyFilters(): void {
-    const filters: any = {
-      transactionKind: this.selectedOptionType,
-      startDate: this.fromDate
-        ? this.fromDate instanceof Date
-          ? this.fromDate.toISOString()
-          : ''
-        : '',
-      endDate: this.toDate
-        ? this.toDate instanceof Date
-          ? this.toDate.toISOString()
-          : ''
-        : '',
-      page: 1,
-      pageSize: 10,
-      sortBy: '',
-      sortOrder: 'asc',
+    const filters = {
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+      selectedOptionType: this.selectedOptionType,
+      selectedOptionAccount: this.selectedOptionAccount,
+      beneficiary: this.beneficiary,
     };
-
-    console.log('Applying filters with:', filters);
-
-    this.transactionService.fetchTransactionsFromApi().subscribe(
-      (data) => {
-        console.log('Transactions fetched successfully:', data);
-        this.transactionService.updateTransactions();
-      },
-      (error) => {
-        console.error('Error fetching transactions', error);
-      }
-    );
+    this.filtersApplied.emit(filters);
   }
 
   clearFilters(): void {
-    this.fromDate = new Date(2021, 0, 1);
-    this.toDate = new Date(2021, 0, 31);
-    this.selectedOptionType = 'pmt';
+    this.fromDate = null;
+    this.toDate = null;
+    this.selectedOptionType = '';
     this.selectedOptionAccount = 'all';
     this.beneficiary = '';
-    this.applyFilters();
+    this.filtersCleared.emit();
   }
 }
