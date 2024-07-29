@@ -42,7 +42,7 @@ export interface TransactionFilters {
 export interface Category {
   code: string;
   name: string;
-  parentCode?: string;
+  'parent-code': string;
 }
 
 export interface CategoriesResponse {

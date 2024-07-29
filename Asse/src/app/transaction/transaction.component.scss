@@ -1,110 +1,132 @@
-@import '../../styles/variables.scss';
+@import "../../styles/variables.scss";
+.transaction {
+  position: relative;
+}
 
 .transaction-details {
-    padding: 12px 12px 12px 24px;
-    display: flex;
-    justify-content: space-between;
+  padding: 12px 12px 12px 30px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.transaction--details__right{
-    margin-top:24px;
-    text-align: right;
+.transaction--details__right {
+  margin-top: 24px;
+  text-align: right;
 }
 
-.transaction-id{
-font-size: 14px;
+.transaction-id {
+  font-size: 14px;
 }
 
-.transaction-profile{
-    display: flex;
-    align-items:center;
-}
-  
-.transaction-image{
-    margin: 8px 8px 8px 0;
-    height: 50px;
-    width: 50px;
-    border-radius: 50px;
-    background-color: $primary-color;
-    position:relative;
+.transaction-profile {
+  display: flex;
+  align-items: center;
 }
 
-.cash{
-    color: $bg-white;
-    font-size: 40px;
-    transform: translate(5px,5px);
+.transaction-image {
+  margin: 8px 8px 8px 0;
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+  background-color: $primary-color;
+  position: relative;
 }
 
-.arrow{
-    position:absolute;
-    top:-5px;
-    left:-5px;
-    font-weight:600;
+.cash {
+  color: $bg-white;
+  font-size: 40px;
+  transform: translate(5px, 5px);
 }
 
-.up{
-    color: red;
+.arrow {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  font-weight: 600;
 }
 
-.down{
-    color:green;
+.up {
+  color: red;
 }
 
-.beneficiary-name, .transaction-amount{
-    font-size: 18px;
-    color: $primary-color;
-    font-weight: 500;
-}
-.transaction-decoration{
-color:$primary-color;
+.down {
+  color: green;
 }
 
-.decoration-pin{
-    padding-left: 2px;
-    border-left: 3px solid $primary-color;
+.beneficiary-name,
+.transaction-amount {
+  font-size: 18px;
+  color: $primary-color;
+  font-weight: 500;
+}
+.transaction-decoration {
+  color: $primary-color;
 }
 
-.decoration-image{
-    height:20px;
-    width:20px;
-    border-radius:20px;
-    margin-right:8px;
-    background-image: url('../../assets/images/card.png');
-    background-size: cover; 
-    background-position: center;
-    display:inline-block;
-    transform:transalte(-4px,0)
+.decoration-pin {
+  padding-left: 2px;
+  border-left: 3px solid $primary-color;
 }
 
-.split--button{
-    background: $primary-color;
-    color: $bg-white;
-    padding: 2px 14px;
-    margin-left:10px;
-    font-size: 12px;
-    border-radius: 3px;
-    border: none;
+.decoration-image {
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  margin-right: 8px;
+  background-image: url("../../assets/images/card.png");
+  background-size: cover;
+  background-position: center;
+  display: inline-block;
+  transform: transalte(-4px, 0);
 }
 
-.category-tag{
-    background: $primary-color;
-    color: $bg-white;
-    padding: 2px 10px;
-    font-size: 12px;
-    border-radius: 3px;
-    max-width: fit-content;
+.split--button {
+  background: $primary-color;
+  color: $bg-white;
+  padding: 2px 14px;
+  margin-left: 10px;
+  font-size: 12px;
+  border-radius: 3px;
+  border: none;
+}
+
+.category-tag {
+  background: $primary-color;
+  color: $bg-white;
+  padding: 2px 10px;
+  font-size: 12px;
+  max-width: fit-content;
+  position: relative;
+  border-radius: 4px;
+  border: none;
+}
+
+.add-category-button {
+  background: $dark-gray;
+  padding: 2px 10px;
+  border: none;
+  font-size: 12px;
+}
+
+.plus {
+  color: $bg-white;
+  font-size: 14px;
+  transform: translate(4px, 2px);
+  font-weight: 600;
+}
+
+.checkbox {
+  position: absolute;
+  bottom: 45%;
+  left: 10px;
+  border: 2px solid $primary-color;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: $primary-color;
+}
+
+.checkbox:checked {
+  background-color: $primary-color;
 }
 
 
-.add-category-button{
-    background: $dark-gray;
-    padding: 2px 10px;
-    border: none;
-}
-
-.plus{
-    color: $bg-white;
-    font-size: 14px;
-    transform: translate(4px,2px);
-    font-weight: 600;
-}

@@ -14,7 +14,21 @@ export class TransactionService {
   private apiUrl = 'http://127.0.0.1:4010/transactions';
   private localStorageKey = 'transactions';
 
-  constructor(private http: HttpClient) { }
+  private currentPage = 1;
+  private currentPageSize = 3;
+
+  constructor(private http: HttpClient) {
+    this.initializeTransactions();
+  }
+
+  private initializeTransactions(): void {
+    const storedTransactions = this.getStoredTransactions();
+    if (storedTransactions.length === 0) {
+      this.fetchTransactionsFromApi().subscribe();
+    } else {
+      this.updateTransactions();
+    }
+  }
 
   fetchTransactionsFromApi(): Observable<TransactionsResponse> {
     return this.http.get<TransactionsResponse>(this.apiUrl).pipe(
@@ -38,13 +52,27 @@ export class TransactionService {
     return storedTransactions ? JSON.parse(storedTransactions) : [];
   }
 
+  private sortTransactions(transactions: Transaction[]): Transaction[] {
+    return transactions.sort((a, b) => {
+      const dateComparison = new Date(b.date).getTime() - new Date(a.date).getTime();
+      if (dateComparison !== 0) return dateComparison;
+
+      if (a.catcode === undefined && b.catcode !== undefined) return 1;
+      if (a.catcode !== undefined && b.catcode === undefined) return -1;
+      if (a.catcode === undefined && b.catcode === undefined) return 0;
+      return a.catcode.localeCompare(b.catcode);
+    });
+  }
+
   updateTransactions(): void {
-    const storedTransactions = this.getStoredTransactions();
+    let storedTransactions = this.getStoredTransactions();
+    storedTransactions = this.sortTransactions(storedTransactions);
+    const paginatedTransactions = storedTransactions.slice((this.currentPage - 1) * this.currentPageSize, this.currentPage * this.currentPageSize);
     const transactionsResponse: TransactionsResponse = {
-      items: storedTransactions,
+      items: paginatedTransactions,
       ['total-count']: storedTransactions.length,
-      page: 1,
-      'page-size': 10,
+      page: this.currentPage,
+      'page-size': this.currentPageSize,
       'sort-by': '',
       'sort-order': ''
     };
@@ -52,6 +80,9 @@ export class TransactionService {
   }
 
   getTransactions(page: number, pageSize: number, filters: any = {}): void {
+    this.currentPage = page;
+    this.currentPageSize = pageSize;
+
     let storedTransactions = this.getStoredTransactions();
 
     // Apply filters
@@ -70,6 +101,8 @@ export class TransactionService {
     if (filters.beneficiary) {
       storedTransactions = storedTransactions.filter(transaction => transaction['beneficiary-name'].includes(filters.beneficiary));
     }
+
+    storedTransactions = this.sortTransactions(storedTransactions);
 
     const paginatedTransactions = storedTransactions.slice((page - 1) * pageSize, page * pageSize);
     const transactionsResponse: TransactionsResponse = {

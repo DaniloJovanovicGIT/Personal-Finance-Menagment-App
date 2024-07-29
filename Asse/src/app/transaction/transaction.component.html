@@ -1,4 +1,5 @@
-<div *ngIf="transaction">
+<div *ngIf="transaction" [ngClass]="{'selected': isSelected}" class="transaction">
+  <input *ngIf="isSelecting" type="checkbox" [checked]="isSelected" (change)="toggleSelection()" class="checkbox"/>
   <div class="transaction-details">
     <div class="transaction--details__left">
       <div class="transaction-id">ID: {{ transaction.id }}</div>
@@ -28,7 +29,7 @@
            {{ transaction.category?.name }}
         </div>
         <ng-template #addCategory>
-          <button class="category-tag add-category-button" (click)="addCategory">
+          <button class="category-tag add-category-button" (click)="openCategoryModal(transaction.id)">
              Add Category<span class="plus material-icons">add</span>
           </button>
         </ng-template>
