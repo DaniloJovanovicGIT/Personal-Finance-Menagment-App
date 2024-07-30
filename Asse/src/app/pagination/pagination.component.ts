@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   selector: 'app-pagination',
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.scss']
@@ -13,6 +14,7 @@ export class PaginationComponent implements OnInit {
   @Input() itemsPerPage: number = 10;
   @Input() currentPage: number = 1;
   @Output() pageChanged = new EventEmitter<number>();
+  @Output() itemsPerPageChanged = new EventEmitter<number>();
 
   totalPages: number = 0;
   pages: number[] = [];
@@ -50,5 +52,11 @@ export class PaginationComponent implements OnInit {
     if (this.currentPage < this.totalPages) {
       this.selectPage(this.currentPage + 1);
     }
+  }
+
+  onItemsPerPageChange(): void {
+    this.itemsPerPageChanged.emit(this.itemsPerPage);
+    this.calculateTotalPages();
+    this.selectPage(1); // Reset to first page when items per page change
   }
 }
