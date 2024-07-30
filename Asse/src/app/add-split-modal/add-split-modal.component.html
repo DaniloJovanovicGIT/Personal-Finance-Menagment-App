@@ -1,0 +1,55 @@
+<div class="modal">
+    <div class="modal-content">
+      <div class="modal-title">Split Transaction</div>
+      <div class="modal-paragraph">
+        <ng-container *ngIf="transactionId; else noTransaction">
+          Transaction ID: {{ transactionId }}
+        </ng-container>
+        <ng-template #noTransaction>
+          No transaction ID provided.
+        </ng-template>
+      </div>
+      <div *ngFor="let split of splits; let i = index" class="split-group">
+        <div class="selector">
+          <select
+            [(ngModel)]="split.selectedMainCategory"
+            (change)="updateSubCategories(i)"
+          >
+            <option [value]="null" disabled class="placeholder">
+              Choose category
+            </option>
+            <option *ngFor="let category of mainCategories" [value]="category.code">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div class="selector">
+          <select
+            [(ngModel)]="split.selectedSubCategory"
+            [disabled]="!split.selectedMainCategory"
+          >
+            <option [value]="null" disabled class="placeholder">
+              Choose subcategory
+            </option>
+            <option *ngFor="let subCategory of split.subCategories" [value]="subCategory.code">
+              {{ subCategory.name }}
+            </option>
+          </select>
+        </div>
+        <div class="amount-input">
+          <input
+            type="number"
+            [(ngModel)]="split.amount"
+            placeholder="Enter amount"
+          />
+        </div>
+        <button class="remove-split" (click)="removeSplit(i)">Remove</button>
+      </div>
+      <div class="navigation">
+        <button class="add-split" (click)="addSplit()">Add Split</button>
+        <button class="close" (click)="onCloseModal()">Cancel</button>
+        <button (click)="applySplits()">Apply</button>
+      </div>
+    </div>
+  </div>
+  

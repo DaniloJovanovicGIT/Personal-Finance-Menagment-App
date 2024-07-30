@@ -46,7 +46,7 @@
 }
 
 .up {
-  color: red;
+  color:$accent-color-orange;
 }
 
 .down {
@@ -60,7 +60,15 @@
   font-weight: 500;
 }
 .transaction-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: right;
   color: $primary-color;
+  margin-bottom: 5px;
+}
+
+.transaction-kind{
+  margin-right: 10px;
 }
 
 .decoration-pin {
@@ -77,7 +85,6 @@
   background-size: cover;
   background-position: center;
   display: inline-block;
-  transform: transalte(-4px, 0);
 }
 
 .split--button {
@@ -130,3 +137,6 @@
 }
 
 
+.accent{
+  background: $accent-color;
+}

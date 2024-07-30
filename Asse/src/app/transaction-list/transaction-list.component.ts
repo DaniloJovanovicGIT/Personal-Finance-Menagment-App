@@ -1,19 +1,7 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { TransactionService } from '../services/transaction.service';
 import { CategoryService } from '../services/categories.service';
-import {
-  TransactionsResponse,
-  Transaction,
-  Category,
-  CategoriesResponse,
-} from '../../types/interfaces';
+import { TransactionsResponse, Transaction, Category, CategoriesResponse } from '../../types/interfaces';
 import { CommonModule } from '@angular/common';
 import { TransactionComponent } from '../transaction/transaction.component';
 import { PaginationComponent } from '../pagination/pagination.component';
@@ -39,12 +27,12 @@ export class TransactionsListComponent implements OnInit, OnChanges, OnDestroy {
   transactions: TransactionsResponse | null = null;
   categories: Category[] = [];
   currentPage: number = 1;
-  pageSize: number = 3;
+  pageSize: number = 3; // Set the default page size
   private transactionsSub: Subscription | null = null;
   showCategoryModal: boolean = false;
-  selectedTransactionId: string | null = null;
-  isSelecting: boolean = false;
   selectedTransactionIds: string[] = [];
+  isSelecting: boolean = false;
+  singleTransaction: Transaction | null = null; // New property for single transaction
 
   constructor(
     private transactionService: TransactionService,
@@ -129,23 +117,63 @@ export class TransactionsListComponent implements OnInit, OnChanges, OnDestroy {
     this.loadTransactions();
   }
 
-  onTransactionModified(transaction: Transaction): void {
-    this.transactionService.modifyTransaction(transaction);
+  onItemsPerPageChanged(itemsPerPage: number): void {
+    this.pageSize = itemsPerPage;
+    this.currentPage = 1; // Reset to first page when items per page change
+    this.loadTransactions();
   }
 
-  openCategoryModal(transactionId: string | string[]): void {
-    if (Array.isArray(transactionId)) {
-      this.selectedTransactionIds = transactionId;
-    } else {
-      this.selectedTransactionId = transactionId;
+  onTransactionModified(transaction: Transaction): void {
+    if (transaction.id) {
+      this.transactionService.modifyTransaction(transaction);
+      this.loadTransactions();
     }
+  }
+
+  toggleSelect(transactionId: string): void {
+    const index = this.selectedTransactionIds.indexOf(transactionId);
+    if (index > -1) {
+      this.selectedTransactionIds.splice(index, 1);
+    } else {
+      this.selectedTransactionIds.push(transactionId);
+    }
+  }
+
+  confirmSelection(): void {
+    if (this.selectedTransactionIds.length > 0) {
+      this.openCategoryModal();
+    }
+  }
+
+  openCategoryModal(transaction: Transaction | null = null): void {
+    this.singleTransaction = transaction;
     this.showCategoryModal = true;
+  }
+
+  handleCategoryAdded(event: { categoryCode: string; subCategoryCode: string | null }): void {
+    if (this.singleTransaction) {
+      this.singleTransaction.catcode = event.categoryCode;
+      this.onTransactionModified(this.singleTransaction);
+    } else {
+      this.selectedTransactionIds.forEach((id) => {
+        const transaction = this.transactions?.items.find((t) => t.id === id);
+        if (transaction) {
+          transaction.catcode = event.categoryCode;
+          this.onTransactionModified(transaction);
+        }
+      });
+    }
+    this.closeCategoryModal();
   }
 
   closeCategoryModal(): void {
     this.showCategoryModal = false;
-    this.selectedTransactionId = null;
     this.selectedTransactionIds = [];
+    this.singleTransaction = null;
+  }
+
+  onTransactionSelected(transactionId: string): void {
+    this.toggleSelect(transactionId);
   }
 
   startSelecting(): void {
@@ -155,39 +183,5 @@ export class TransactionsListComponent implements OnInit, OnChanges, OnDestroy {
   cancelSelection(): void {
     this.isSelecting = false;
     this.selectedTransactionIds = [];
-  }
-
-  confirmSelection(): void {
-    if (this.selectedTransactionIds.length > 0) {
-      this.openCategoryModal(this.selectedTransactionIds);
-    } else {
-      alert('Please select transactions to categorize.');
-    }
-  }
-
-  onTransactionSelected(transactionId: string): void {
-    const index = this.selectedTransactionIds.indexOf(transactionId);
-    if (index > -1) {
-      this.selectedTransactionIds.splice(index, 1);
-    } else {
-      this.selectedTransactionIds.push(transactionId);
-    }
-  }
-
-  handleCategoryAdded(
-    event: { categoryCode: string; subCategoryCode: string | null }
-  ): void {
-    if (event) {
-      this.selectedTransactionIds.forEach(transactionId => {
-        const transaction = this.transactions?.items.find(
-          (t) => t.id === transactionId
-        );
-        if (transaction) {
-          transaction.catcode = event.categoryCode;
-          this.onTransactionModified(transaction);
-        }
-      });
-    }
-    this.closeCategoryModal();
   }
 }

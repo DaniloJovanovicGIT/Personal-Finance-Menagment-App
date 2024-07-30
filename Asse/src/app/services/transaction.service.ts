@@ -4,11 +4,10 @@ import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Transaction, TransactionsResponse } from '../../types/interfaces';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TransactionService {
-  private transactionsSubject = new BehaviorSubject<TransactionsResponse | null>(null);
+  private transactionsSubject =
+    new BehaviorSubject<TransactionsResponse | null>(null);
   transactions$ = this.transactionsSubject.asObservable();
 
   private apiUrl = 'http://127.0.0.1:4010/transactions';
@@ -54,7 +53,8 @@ export class TransactionService {
 
   private sortTransactions(transactions: Transaction[]): Transaction[] {
     return transactions.sort((a, b) => {
-      const dateComparison = new Date(b.date).getTime() - new Date(a.date).getTime();
+      const dateComparison =
+        new Date(b.date).getTime() - new Date(a.date).getTime();
       if (dateComparison !== 0) return dateComparison;
 
       if (a.catcode === undefined && b.catcode !== undefined) return 1;
@@ -67,14 +67,17 @@ export class TransactionService {
   updateTransactions(): void {
     let storedTransactions = this.getStoredTransactions();
     storedTransactions = this.sortTransactions(storedTransactions);
-    const paginatedTransactions = storedTransactions.slice((this.currentPage - 1) * this.currentPageSize, this.currentPage * this.currentPageSize);
+    const paginatedTransactions = storedTransactions.slice(
+      (this.currentPage - 1) * this.currentPageSize,
+      this.currentPage * this.currentPageSize
+    );
     const transactionsResponse: TransactionsResponse = {
       items: paginatedTransactions,
       ['total-count']: storedTransactions.length,
       page: this.currentPage,
       'page-size': this.currentPageSize,
       'sort-by': '',
-      'sort-order': ''
+      'sort-order': '',
     };
     this.transactionsSubject.next(transactionsResponse);
   }
@@ -87,38 +90,50 @@ export class TransactionService {
 
     // Apply filters
     if (filters.selectedOptionType) {
-      storedTransactions = storedTransactions.filter(transaction => transaction.kind === filters.selectedOptionType);
+      storedTransactions = storedTransactions.filter(
+        (transaction) => transaction.kind === filters.selectedOptionType
+      );
     }
 
     if (filters.fromDate) {
-      storedTransactions = storedTransactions.filter(transaction => new Date(transaction.date) >= new Date(filters.fromDate));
+      storedTransactions = storedTransactions.filter(
+        (transaction) =>
+          new Date(transaction.date) >= new Date(filters.fromDate)
+      );
     }
 
     if (filters.toDate) {
-      storedTransactions = storedTransactions.filter(transaction => new Date(transaction.date) <= new Date(filters.toDate));
+      storedTransactions = storedTransactions.filter(
+        (transaction) => new Date(transaction.date) <= new Date(filters.toDate)
+      );
     }
 
     if (filters.beneficiary) {
-      storedTransactions = storedTransactions.filter(transaction => transaction['beneficiary-name'].includes(filters.beneficiary));
+      storedTransactions = storedTransactions.filter((transaction) =>
+        transaction['beneficiary-name'].includes(filters.beneficiary)
+      );
     }
 
     storedTransactions = this.sortTransactions(storedTransactions);
 
-    const paginatedTransactions = storedTransactions.slice((page - 1) * pageSize, page * pageSize);
+    const paginatedTransactions = storedTransactions.slice(
+      (page - 1) * pageSize,
+      page * pageSize
+    );
     const transactionsResponse: TransactionsResponse = {
       items: paginatedTransactions,
       ['total-count']: storedTransactions.length,
       page: page,
       'page-size': pageSize,
       'sort-by': '',
-      'sort-order': ''
+      'sort-order': '',
     };
     this.transactionsSubject.next(transactionsResponse);
   }
 
   modifyTransaction(transaction: Transaction): void {
     let storedTransactions = this.getStoredTransactions();
-    const index = storedTransactions.findIndex(t => t.id === transaction.id);
+    const index = storedTransactions.findIndex((t) => t.id === transaction.id);
     if (index !== -1) {
       storedTransactions[index] = transaction;
       this.storeTransactions(storedTransactions);
