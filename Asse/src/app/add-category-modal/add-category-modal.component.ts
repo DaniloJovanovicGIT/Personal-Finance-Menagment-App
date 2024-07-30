@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CategoryService } from '../services/categories.service';
-import { Category } from '../../types/interfaces';
+import { Category, Transaction } from '../../types/interfaces';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,8 +11,9 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./add-category-modal.component.scss'],
   imports: [CommonModule, FormsModule]
 })
-export class AddCategoryModalComponent implements OnInit {
+export class AddCategoryModalComponent implements OnInit, OnChanges {
   @Input() transactionIds: string[] = [];
+  @Input() transaction: Transaction | null = null; // New input for single transaction
   @Output() categoryAdded = new EventEmitter<{ categoryCode: string; subCategoryCode: string | null }>();
   @Output() closeModal = new EventEmitter<void>();
 
@@ -28,17 +29,48 @@ export class AddCategoryModalComponent implements OnInit {
     this.loadCategories();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['transaction']) {
+      this.setInitialCategories();
+    }
+  }
+
   loadCategories(): void {
     this.categoryService.fetchCategories({}).subscribe({
       next: (response) => {
         this.allCategories = response.items;
         this.mainCategories = this.allCategories.filter(category => !category['parent-code']);
+        this.setInitialCategories();
       },
       error: (error) => {
         console.error('Error loading categories', error);
       }
     });
   }
+
+  setInitialCategories(): void {
+    if (this.transaction) {
+      const selectedCategory = this.allCategories.find(
+        (category) => category.code === this.transaction?.catcode
+      );
+  
+      if (selectedCategory) {
+        if (selectedCategory['parent-code']) {
+          // The selected category is a subcategory
+          this.selectedMainCategory = selectedCategory['parent-code'];
+          this.selectedSubCategory = selectedCategory.code;
+        } else {
+          // The selected category is a main category
+          this.selectedMainCategory = selectedCategory.code;
+          this.selectedSubCategory = null;
+        }
+  
+        // Update subcategories after setting the main category
+        this.updateSubCategories();
+      }
+    }
+  }
+  
 
   updateSubCategories(): void {
     if (this.selectedMainCategory) {

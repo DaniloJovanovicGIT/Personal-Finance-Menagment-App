@@ -75,12 +75,16 @@
     border: none;
   }
 
+  select:disabled {
+    background: $primary-color-light;
+  }
+
   .placeholder {
     color: $bg-white;
   }
 
   option {
-    background:$primary-color-light ;
+    background: $primary-color;
     color: $bg-white;
   }
 }
@@ -95,14 +99,16 @@
     border: $text-color;
     padding: 10px 0px;
     color: $bg-white;
-    background: $accent-color;
-    
   }
   .close {
-    background-color: $dark-gray;
+    background-color: $accent-color-orange;
   }
 }
 
 .apply {
   background-color: $accent-color;
+}
+
+.apply:disabled {
+  background-color: $dark-gray;
 }
