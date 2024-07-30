@@ -11,12 +11,13 @@ export interface Transaction {
   catcode: string;
   category?: Category; 
 
-  splits: [Split];
+  splits: Split[];
 }
 
 export interface Split {
   catcode: string; 
   amount: number; 
+  category?: Category;
 }
 
 export interface TransactionsResponse {
