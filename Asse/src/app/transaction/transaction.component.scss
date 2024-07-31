@@ -74,6 +74,7 @@
 .decoration-pin {
   padding-left: 2px;
   border-left: 3px solid $primary-color;
+
 }
 
 .decoration-image {
@@ -95,6 +96,8 @@
   font-size: 12px;
   border-radius: 3px;
   border: none;
+  cursor: pointer;
+
 }
 
 .category-tag {
@@ -106,6 +109,8 @@
   position: relative;
   border-radius: 4px;
   border: none;
+  cursor: pointer;
+
 }
 
 .add-category-button {
@@ -113,6 +118,8 @@
   padding: 2px 10px;
   border: none;
   font-size: 12px;
+  cursor: pointer;
+
 }
 
 .plus {

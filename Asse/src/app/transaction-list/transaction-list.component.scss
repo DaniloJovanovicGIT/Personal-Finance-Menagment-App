@@ -40,12 +40,15 @@ ul {
   border-radius: 3px;
   border: none;
   margin: 0 5px;
+  cursor: pointer;
+
 }
 
 .multi-select-actions{
   display: flex;
   color: $dark-gray;
   font-size: 16px;
+  cursor: pointer;
   span{
     color: $primary-color;
   }

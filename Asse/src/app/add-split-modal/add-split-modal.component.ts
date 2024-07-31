@@ -1,6 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CategoryService } from '../services/categories.service';
-import { Category, CategoriesResponse, Split } from '../../types/interfaces';
+import {
+  Category,
+  CategoriesResponse,
+  Split,
+  Transaction,
+} from '../../types/interfaces';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -8,7 +13,7 @@ interface SplitData {
   selectedMainCategory: string | null;
   selectedSubCategory: string | null;
   subCategories: Category[];
-  amount: number;
+  amount: number ;
 }
 
 @Component({
@@ -16,11 +21,10 @@ interface SplitData {
   selector: 'app-add-split-modal',
   templateUrl: './add-split-modal.component.html',
   styleUrls: ['./add-split-modal.component.scss'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule],
 })
 export class AddSplitModalComponent implements OnInit {
-  @Input() transactionId: string | null = null;
-  @Input() transactionAmount: number = 0;
+  @Input() transaction: Transaction | null = null;
   @Output() splitAdded: EventEmitter<Split[]> = new EventEmitter<Split[]>();
   @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
@@ -30,14 +34,14 @@ export class AddSplitModalComponent implements OnInit {
       selectedMainCategory: null,
       selectedSubCategory: null,
       subCategories: [],
-      amount: 0
+      amount: 0,
     },
     {
       selectedMainCategory: null,
       selectedSubCategory: null,
       subCategories: [],
-      amount: 0
-    }
+      amount: 0,
+    },
   ];
 
   constructor(private categoryService: CategoryService) {}
@@ -53,7 +57,7 @@ export class AddSplitModalComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error loading categories', error);
-      }
+      },
     });
   }
 
@@ -66,7 +70,7 @@ export class AddSplitModalComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Error loading subcategories', error);
-        }
+        },
       });
     }
   }
@@ -76,7 +80,7 @@ export class AddSplitModalComponent implements OnInit {
       selectedMainCategory: null,
       selectedSubCategory: null,
       subCategories: [],
-      amount: 0
+      amount: 0,
     });
   }
 
@@ -86,26 +90,34 @@ export class AddSplitModalComponent implements OnInit {
     }
   }
 
-  applySplits(): void {
-    const totalAmount = this.splits.reduce((sum, split) => sum + split.amount, 0);
+  get totalAmount(): number {
+    return this.splits.reduce((sum, split) => sum + split.amount, 0);
+  }
 
-    if (totalAmount !== this.transactionAmount) {
-      alert('The sum of all split amounts must equal the transaction amount.');
+  get isApplyDisabled(): boolean {
+    if (this.splits.length < 1) {
+      return true;
+    }
+    for (const split of this.splits) {
+      if (!split.selectedMainCategory || split.amount <= 0) {
+        return true;
+      }
+    }
+    return this.totalAmount !== this.transaction?.amount;
+  }
+
+  applySplits(): void {
+    if (this.isApplyDisabled) {
       return;
     }
 
-    for (const split of this.splits) {
-      if (!split.selectedMainCategory && !split.selectedSubCategory) {
-        alert('Each split must have a selected category or subcategory.');
-        return;
-      }
-    }
-
-    const validSplits = this.splits.map(split => ({
-      catcode: split.selectedSubCategory ? split.selectedSubCategory : (split.selectedMainCategory || ''),
-      amount: split.amount
+    const validSplits = this.splits.map((split) => ({
+      catcode: split.selectedSubCategory
+        ? split.selectedSubCategory
+        : split.selectedMainCategory || '',
+      amount: split.amount,
     }));
-
+    console.log(validSplits);
     this.splitAdded.emit(validSplits);
     this.onCloseModal();
   }

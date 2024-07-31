@@ -51,8 +51,7 @@
   </div>
   <app-add-split-modal
     *ngIf="showSplitModal"
-    [transactionId]="transaction.id"
-    [transactionAmount]="transaction.amount"
+    [transaction]="transaction"
     (closeModal)="closeSplitModal()"
     (splitAdded)="handleSplitsAdded($event)"
   ></app-add-split-modal>

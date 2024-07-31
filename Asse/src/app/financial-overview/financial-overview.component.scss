@@ -11,9 +11,8 @@
 .account--info {
   display: flex;
   color: $bg-white;
-
   justify-content: space-between;
-  background: linear-gradient(90deg, $secondary-color, $accent-color);
+  background-image: url("../../assets/images/basket-image.jpg");
   padding: 40px 20px;
 }
 
@@ -85,7 +84,7 @@
 }
 
 .view--tab {
-padding: 5px;
+  padding: 5px;
   margin-top: 5px;
+  cursor: pointer;
 }
-
