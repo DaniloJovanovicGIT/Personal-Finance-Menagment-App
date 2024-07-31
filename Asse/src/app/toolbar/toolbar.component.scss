@@ -20,6 +20,8 @@
   height: 50px;
   display: flex;
   padding: 0 10px;
+  position: relative;
+  cursor: pointer;
 
   .profile--image {
     width: 60px;
@@ -28,6 +30,17 @@
     border-radius: 60px;
     transform: translate(0, 10px);
     margin-right: 10px;
+  }
+
+  .message-number{
+    position: absolute;
+    left: 50px;
+    top:5px;
+    font-size: 10px;
+    background: $accent-color-orange;
+    padding: 2px 5px;
+    border-radius: 50%;
+    z-index: 100;
   }
 
   .profile--text {
