@@ -85,7 +85,6 @@ export class TransactionService {
   getTransactions(page: number, pageSize: number, filters: any = {}): void {
     this.currentPage = page;
     this.currentPageSize = pageSize;
-
     let storedTransactions = this.getStoredTransactions();
 
     // Apply filters
@@ -134,8 +133,11 @@ export class TransactionService {
   modifyTransaction(transaction: Transaction): void {
     let storedTransactions = this.getStoredTransactions();
     const index = storedTransactions.findIndex((t) => t.id === transaction.id);
+    console.log('modifyTransaction - Index:', index);
+    console.log('modifyTransaction - Transaction:', transaction);
     if (index !== -1) {
       storedTransactions[index] = transaction;
+      console.log('modifyTransaction - Stored Transactions before storing:', storedTransactions);
       this.storeTransactions(storedTransactions);
       this.updateTransactions();
     }

@@ -10,7 +10,6 @@ export interface Transaction {
   kind: string;
   catcode: string;
   category?: Category; 
-
   splits: Split[];
 }
 

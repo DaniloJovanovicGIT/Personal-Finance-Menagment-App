@@ -22,7 +22,7 @@
       [isSelected]="selectedTransactionIds.includes(transaction.id)"
       (transactionSelected)="onTransactionSelected($event)"
       [ngClass]="{ gray: i % 2 !== 0, white: i % 2 === 0 }"
-      (transactionModified)="onTransactionModified(transaction)"
+      (splitsAdded)="onSplitsAdded(transaction)"
       (openCategoryModal)="openCategoryModal(transaction)"
     ></app-transaction>
   </li>

@@ -3,7 +3,7 @@
     <div class="modal-title">Choose category</div>
     <div class="modal-paragraph">
       <ng-container *ngIf="transaction; else multipleTransactionsText">
-        You are now categorizing {{ transaction["beneficiary-name"] }}'s
+        You are now categorizing <span class="beneficiary-name">{{ transaction["beneficiary-name"] }}'s</span>
         transaction
       </ng-container>
       <ng-template #multipleTransactionsText>

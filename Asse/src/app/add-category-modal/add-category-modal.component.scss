@@ -54,6 +54,7 @@
   float: right;
   font-size: 28px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .close-button:hover,
@@ -73,6 +74,7 @@
     color: $bg-white;
     background: $primary-color;
     border: none;
+    cursor: pointer;
   }
 
   select:disabled {
@@ -99,6 +101,7 @@
     border: $text-color;
     padding: 10px 0px;
     color: $bg-white;
+    cursor: pointer;
   }
   .close {
     background-color: $accent-color-orange;
@@ -111,4 +114,8 @@
 
 .apply:disabled {
   background-color: $dark-gray;
+}
+
+.beneficiary-name{
+  color: $accent-color;
 }

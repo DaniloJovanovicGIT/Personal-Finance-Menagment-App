@@ -13,7 +13,7 @@ interface SplitData {
   selectedMainCategory: string | null;
   selectedSubCategory: string | null;
   subCategories: Category[];
-  amount: number ;
+  amount: number;
 }
 
 @Component({
@@ -27,8 +27,9 @@ export class AddSplitModalComponent implements OnInit {
   @Input() transaction: Transaction | null = null;
   @Output() splitAdded: EventEmitter<Split[]> = new EventEmitter<Split[]>();
   @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
-
+  allCategories: Category[] = [];
   mainCategories: Category[] = [];
+  subCategories: Category[] = [];
   splits: SplitData[] = [
     {
       selectedMainCategory: null,
@@ -50,12 +51,16 @@ export class AddSplitModalComponent implements OnInit {
     this.loadMainCategories();
   }
 
+
   loadMainCategories(): void {
     this.categoryService.fetchCategories({}).subscribe({
-      next: (response: CategoriesResponse) => {
-        this.mainCategories = response.items;
+      next: (response) => {
+        this.allCategories = response.items;
+        this.mainCategories = this.allCategories.filter(
+          (category) => !category['parent-code']
+        );
       },
-      error: (error: any) => {
+      error: (error) => {
         console.error('Error loading categories', error);
       },
     });
@@ -64,14 +69,9 @@ export class AddSplitModalComponent implements OnInit {
   updateSubCategories(index: number): void {
     const selectedMainCategory = this.splits[index].selectedMainCategory;
     if (selectedMainCategory) {
-      this.categoryService.fetchCategories(selectedMainCategory).subscribe({
-        next: (response: CategoriesResponse) => {
-          this.splits[index].subCategories = response.items;
-        },
-        error: (error: any) => {
-          console.error('Error loading subcategories', error);
-        },
-      });
+      this.splits[index].subCategories = this.allCategories.filter(
+        (category) => category['parent-code'] === selectedMainCategory
+      );
     }
   }
 
@@ -108,6 +108,7 @@ export class AddSplitModalComponent implements OnInit {
 
   applySplits(): void {
     if (this.isApplyDisabled) {
+      alert('Please select a category and amount for each split');
       return;
     }
 

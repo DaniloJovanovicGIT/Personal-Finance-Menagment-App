@@ -19,11 +19,11 @@ export class TransactionComponent implements OnInit {
   @Input() isSelecting: boolean = false;
   @Input() isSelected: boolean = false;
   @Output() transactionSelected = new EventEmitter<string>();
-  @Output() transactionModified = new EventEmitter<Transaction>();
+  @Output() splitsAdded = new EventEmitter<Transaction>();
 
   showSplitModal: boolean = false;
   showSplits: boolean = false;
-
+  editingSplits: Split[] = [];
   categories: Category[] = [];
 
   constructor(
@@ -54,8 +54,8 @@ export class TransactionComponent implements OnInit {
   handleSplitsAdded(splits: Split[]): void {
     if (this.transaction) {
       this.transaction.splits = this.assignCategoriesToSplits(splits);
-      this.transactionService.modifyTransaction(this.transaction);
-      this.transactionModified.emit(this.transaction);
+      console.log("split added", this.transaction);
+      this.transactionService.modifyTransaction(this.transaction)
     }
     this.closeSplitModal();
   }
