@@ -143,10 +143,17 @@
   background: $accent-color;
 }
 
+.section-split {
+  display: flex;
+  justify-content: right;
+}
+
 .splits {
   display: flex;
   justify-content: right;
+  flex-wrap: wrap;
   align-items: center;
+  padding-bottom: 10px;
 }
 
 .split-details {

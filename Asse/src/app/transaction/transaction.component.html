@@ -39,14 +39,15 @@
         <button *ngIf="!transaction.splits?.length" class="split--button" (click)="openSplitTransactionModal()">Split transaction</button>
         <button *ngIf="transaction.splits?.length && !showSplits" class="split--button accent" (click)="toggleShowSplits()">Show splits</button>
         <button *ngIf="showSplits" class="split--button accent" (click)="toggleShowSplits()">Hide splits</button>
-        <div *ngIf="showSplits" class="splits">
-          <div *ngFor="let split of transaction.splits" >
-            <div class="split-details category-tag">
-              
-              <span>{{ split.amount }} {{ transaction.currency }} - {{ split.category?.name || split.catcode }}</span>
-            </div>
-          </div>
-        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showSplits" class="splits">
+    <div *ngFor="let split of transaction.splits" >
+      <div class="split-details category-tag">
+        
+        <span>{{ split.amount }} {{ transaction.currency }} - {{ split.category?.name || split.catcode }}</span>
       </div>
     </div>
   </div>

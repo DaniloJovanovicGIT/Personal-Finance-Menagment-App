@@ -118,7 +118,6 @@ export class AddSplitModalComponent implements OnInit {
         : split.selectedMainCategory || '',
       amount: split.amount,
     }));
-    console.log(validSplits);
     this.splitAdded.emit(validSplits);
     this.onCloseModal();
   }

@@ -133,13 +133,46 @@ export class TransactionService {
   modifyTransaction(transaction: Transaction): void {
     let storedTransactions = this.getStoredTransactions();
     const index = storedTransactions.findIndex((t) => t.id === transaction.id);
-    console.log('modifyTransaction - Index:', index);
-    console.log('modifyTransaction - Transaction:', transaction);
+    this.http
+      .post(`http://127.0.0.1:4010/transaction/${transaction.id}/categorize`, {
+        catcode: transaction.catcode,
+      })
+      .subscribe({
+        next: () => {
+          console.log('Transaction modified API call successful');
+        },
+        error: (error) => {
+          console.error('Error modifying transaction', error);
+        },
+      });
     if (index !== -1) {
       storedTransactions[index] = transaction;
-      console.log('modifyTransaction - Stored Transactions before storing:', storedTransactions);
+      this.storeTransactions(storedTransactions);
+      this.updateTransactions();
+    }
+  }
+
+  splitTransaction(transaction: Transaction): void {
+    let storedTransactions = this.getStoredTransactions();
+    const index = storedTransactions.findIndex((t) => t.id === transaction.id);
+    this.http
+      .post(`http://127.0.0.1:4010/transaction/${transaction.id}/split`, {
+        splits: transaction.splits,
+      })
+      .subscribe({
+        next: () => {
+          console.log('Transaction Splited API Call successful');
+        },
+        error: (error) => {
+          console.error('Error splitting transaction', error);
+        },
+      });
+    if (index !== -1) {
+      storedTransactions[index] = transaction;
       this.storeTransactions(storedTransactions);
       this.updateTransactions();
     }
   }
 }
+
+

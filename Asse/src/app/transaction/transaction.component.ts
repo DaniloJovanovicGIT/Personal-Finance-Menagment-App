@@ -54,8 +54,7 @@ export class TransactionComponent implements OnInit {
   handleSplitsAdded(splits: Split[]): void {
     if (this.transaction) {
       this.transaction.splits = this.assignCategoriesToSplits(splits);
-      console.log("split added", this.transaction);
-      this.transactionService.modifyTransaction(this.transaction)
+      this.transactionService.splitTransaction(this.transaction)
     }
     this.closeSplitModal();
   }

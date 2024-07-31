@@ -124,7 +124,8 @@ export class TransactionsListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onTransactionModified(transaction: Transaction): void {
-    console.log('onTransactionModified - Transaction:', transaction);
+
+    
     if (transaction.id) {
       this.transactionService.modifyTransaction(transaction);
       this.loadTransactions();
