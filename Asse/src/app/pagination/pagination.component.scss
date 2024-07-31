@@ -59,7 +59,16 @@
 
 .pages{
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
+  width: 400px;
+}
+
+.page-size{
+  select{
+    border: 1px solid $dark-gray;
+    border-radius: 3px;
+    color: $dark-gray;
+  }
 }
 
 .pag-button {
